@@ -28,7 +28,6 @@
         android:id="@+id/btn1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="51dp"
         android:text="Button 1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -38,7 +37,6 @@
         android:id="@+id/btn2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="23dp"
         android:text="Button 2"
         app:layout_constraintStart_toStartOf="@+id/btn1"
         app:layout_constraintTop_toBottomOf="@+id/btn1" />
