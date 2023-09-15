@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
+import androidx.viewpager2.widget.ViewPager2;
 
 import android.os.Bundle;
 import android.view.View;
@@ -14,10 +15,14 @@ import android.widget.Button;
 import android.widget.TimePicker;
 
 import com.google.android.material.tabs.TabLayout;
+import com.google.android.material.tabs.TabLayoutMediator;
 
 public class MainActivity extends AppCompatActivity {
     TimePicker timePicker;
     Button b2;
+
+    ViewPager2 viewPager2;
+    ViewPagerAdapter viewPagerAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,10 +38,8 @@ public class MainActivity extends AppCompatActivity {
                         new TimePickerFragment();
 
                 timePickerFrag.show(
-                        getSupportFragmentManager(),
-                        "Pick Time Now:"
+                        getSupportFragmentManager(), "Pick Time Now:"
                 );
-
 
             }
         });
@@ -55,36 +58,30 @@ public class MainActivity extends AppCompatActivity {
                 );
             }
         });
-        ViewPager viewPager = findViewById(R.id.viewPager);
-        TabLayout tabLayout = findViewById(R.id.tabLayout);
 
-        MyPagerAdapter adapter = new MyPagerAdapter(getSupportFragmentManager());
-        viewPager.setAdapter(adapter);
+        viewPagerAdapter = new ViewPagerAdapter(
+                getSupportFragmentManager(),
+                getLifecycle()
+        );
 
-        tabLayout.setupWithViewPager(viewPager);
-    }
+        viewPagerAdapter.addFrag(new BlankFragment1());
+        viewPagerAdapter.addFrag(new BlankFragment2());
+        viewPager2 = findViewById(R.id.viewPager2);
+        viewPager2.setOrientation(ViewPager2.ORIENTATION_HORIZONTAL);
 
-    private class MyPagerAdapter extends FragmentPagerAdapter {
-        private final String[] tabTitles = {"One", "Two", "Three"};
+        viewPager2.setAdapter(viewPagerAdapter);
 
-        MyPagerAdapter(FragmentManager fm) {
-            super(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
+        TabLayout tabLayout;
+
+        tabLayout = findViewById(R.id.tablayout);
+
+        new TabLayoutMediator(
+                tabLayout, viewPager2, new TabLayoutMediator.TabConfigurationStrategy() {
+            @Override
+            public void onConfigureTab(@NonNull TabLayout.Tab tab, int position) {
+                tab.setText("" + position + 1);
+            }
         }
-
-        @NonNull
-        @Override
-        public Fragment getItem(int position) {
-            return null;
-        }
-
-        @Override
-        public int getCount() {
-            return tabTitles.length;
-        }
-
-        @Override
-        public CharSequence getPageTitle(int position) {
-            return tabTitles[position];
-        }
+        ).attach();
     }
 }
