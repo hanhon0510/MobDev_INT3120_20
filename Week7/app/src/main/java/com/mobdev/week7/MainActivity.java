@@ -53,6 +53,7 @@ public class MainActivity extends AppCompatActivity {
     public void go() {
         Intent intent = new Intent(this, GreetingActivity.class);
         startActivity(intent);
+
     }
 
     public void sendMessage() {
