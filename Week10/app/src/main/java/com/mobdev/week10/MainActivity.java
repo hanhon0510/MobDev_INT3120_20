@@ -45,7 +45,9 @@ public class MainActivity extends AppCompatActivity {
         button2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                updateContactName(oldName.getText().toString(), newName.getText().toString());
+//                updateContactName(oldName.getText().toString(), newName.getText().toString());
+                insertContacts();
+
             }
         });
 
@@ -67,6 +69,8 @@ public class MainActivity extends AppCompatActivity {
                 while (!cursor.isAfterLast()) {
                     @SuppressLint("Range") String id = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts._ID));
                     @SuppressLint("Range") String name = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
+//                    @SuppressLint("Range") String tel = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+//                    String show = name + " " + tel;
                     list.add(name);
                     cursor.moveToNext();
                 }
@@ -97,6 +101,48 @@ public class MainActivity extends AppCompatActivity {
         }
 
     }
+//    String newName, String newTel
+    public void insertContacts() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_CONTACTS)
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.WRITE_CONTACTS},
+                    999);
+        } else {
+
+            String[] names = {"01", "02", "03"};
+            String[] tels = {"001", "002", "003"};
+
+            for (int i = 0; i< 3; i++) {
+                String newName = names[i];
+                String newTel = tels[i];
+
+                Uri rawContactUri = ContactsContract.RawContacts.CONTENT_URI;
+
+                ContentValues contentValues = new ContentValues();
+                contentValues.put(ContactsContract.RawContacts.ACCOUNT_TYPE, (String) null);
+                contentValues.put(ContactsContract.RawContacts.ACCOUNT_NAME, (String) null);
+
+                Uri contactUri = getContentResolver().insert(rawContactUri, contentValues);
+                long contactId = ContentUris.parseId(contactUri);
+
+                contentValues.clear();
+                contentValues.put(ContactsContract.Data.RAW_CONTACT_ID, contactId);
+                contentValues.put(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.StructuredName.CONTENT_ITEM_TYPE);
+                contentValues.put(ContactsContract.CommonDataKinds.StructuredName.DISPLAY_NAME, newName);
+                getContentResolver().insert(ContactsContract.Data.CONTENT_URI, contentValues);
+
+                contentValues.clear();
+                contentValues.put(ContactsContract.Data.RAW_CONTACT_ID, contactId);
+                contentValues.put(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE);
+                contentValues.put(ContactsContract.CommonDataKinds.Phone.NUMBER, newTel);
+                getContentResolver().insert(ContactsContract.Data.CONTENT_URI, contentValues);
+            }
+
+
+        }
+    }
+
 
 
 }

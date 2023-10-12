@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -25,6 +26,7 @@ public class MainActivity extends AppCompatActivity {
 
                 Intent serviceIntent = new Intent(getApplicationContext(), CustomService.class);
                 startService(serviceIntent);
+                Toast.makeText(MainActivity.this, "start service", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -33,6 +35,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent serviceIntent = new Intent(getApplicationContext(), CustomService.class);
                 stopService(serviceIntent);
+                Toast.makeText(MainActivity.this, "stop service", Toast.LENGTH_SHORT).show();
             }
         });
     }
